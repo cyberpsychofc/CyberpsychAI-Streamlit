@@ -41,11 +41,14 @@ newapi = tweepy.Client(
 api = tweepy.API(auth)
 llm = Groq(api_key=GROQ_API_KEY)  # LLM initialization
 
+post_times = ["19:30","21:30","23:30","01:30","03:30",
+"05:30","07:30","09:30","11:30","13:30","15:30","17:30","19:30"]  # Instance timezone is UTC
+
 rivals = ['MistralAI','ChatGPTapp','deepseek_ai','AnthropicAI','GeminiApp','github','MSFTCopilot','Apple']
 
 model_name = "llama3-8b-8192"
 
-psychs = ['Artifical Intelligence', 'Philosophy', 'Financial Advices']
+psychs = ['Artifical Intelligence', 'Philosophy']
 
 prompt = f"""
 You are an expert on the topic of {random.choice(psychs)}, tell me a funny or uncommon fact about
@@ -65,7 +68,8 @@ def run_scheduler():
         time.sleep(30)
 
 def tweet_job():
-    schedule.every(120).minutes.do(tweet)
+    for post in post_times:
+        schedule.every().day.at(post).do(tweet)
 
 def generate_post_text():
     tweet = llm.chat.completions.create(
@@ -96,7 +100,6 @@ def tweet():
         sampletweet = generate_post_text()
         
         post_result = newapi.create_tweet(text=sampletweet)
-        print("Just Tweeted!")
     
     except Exception as e:
         print(f"Tweet couldn't be posted because: {e}")
@@ -118,7 +121,6 @@ def reply():
     except Exception as e:
         print(f"Reply couldn't be posted because: {e}")
 
-if __name__ == "__main__":
-    tweet_job()
-    task = threading.Thread(target=run_scheduler)
-    task.start()
+tweet_job()
+task = threading.Thread(target=run_scheduler)
+task.start()
