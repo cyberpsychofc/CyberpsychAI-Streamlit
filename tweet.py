@@ -3,11 +3,11 @@ import random
 import tweepy
 from generate_tweet import generate_post_text, generate_reply_text
 
-ACCESS_KEY = st.secret["general"]["ACCESS_KEY"]
-ACCESS_SECRET = st.secret["general"]["ACCESS_SECRET"]
-CONSUMER_KEY = st.secret["general"]["CONSUMER_KEY"]
-CONSUMER_SECRET = st.secret["general"]["CONSUMER_SECRET"]
-BEARER_TOKEN = st.secret["general"]["BEARER_TOKEN"]
+ACCESS_KEY = st.secrets["general"]["ACCESS_KEY"]
+ACCESS_SECRET = st.secrets["general"]["ACCESS_SECRET"]
+CONSUMER_KEY = st.secrets["general"]["CONSUMER_KEY"]
+CONSUMER_SECRET = st.secrets["general"]["CONSUMER_SECRET"]
+BEARER_TOKEN = st.secrets["general"]["BEARER_TOKEN"]
 
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(

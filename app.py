@@ -1,13 +1,15 @@
 import time
 import threading
 import schedule
-from tweet import tweet
+from .tweet import tweet
 import streamlit as st
 
 st.set_page_config(
     page_title="CyberpsychAI",
     layout="centered"
 )
+
+st.title('CyberpsychAI')
 
 # Free-tier sends atmost of 17 requests a day, so plan
 
