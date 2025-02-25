@@ -1,3 +1,4 @@
+import streamlit as st
 import random
 import tweepy
 from generate_tweet import generate_post_text, generate_reply_text
