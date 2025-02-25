@@ -1,10 +1,10 @@
 import time
+import random
+import tweepy
 import threading
 import schedule
 from groq import Groq
 import streamlit as st
-import random
-import tweepy
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -15,6 +15,7 @@ st.set_page_config(
 )
 
 st.title('CyberpsychAI')
+st.markdown("*Thinking something interesting...*")
 
 ACCESS_KEY = st.secrets["general"]["ACCESS_KEY"]
 ACCESS_SECRET = st.secrets["general"]["ACCESS_SECRET"]
@@ -38,20 +39,11 @@ newapi = tweepy.Client(
 )
 
 api = tweepy.API(auth)
+llm = Groq(api_key=GROQ_API_KEY)  # LLM initialization
 
 rivals = ['MistralAI','ChatGPTapp','deepseek_ai','AnthropicAI','GeminiApp','github','MSFTCopilot','Apple']
 
-# Free-tier sends atmost of 17 requests a day, so plan
-
-def run_scheduler():
-    while True:
-        schedule.run_pending()
-        time.sleep(30)
-
-def tweet_job():
-    schedule.every(3).minutes.do(tweet)
-
-llm = Groq(api_key=GROQ_API_KEY)  # LLM initialization
+model_name = "llama3-8b-8192"
 
 psychs = ['Artifical Intelligence', 'Philosophy', 'Financial Advices']
 
@@ -64,9 +56,16 @@ roast = """
 You are a professional comedian. {} is your rival Artifical Intelligence company.
 Roast them in less than 250 words. The context is {}.
 """
+# Free-tier sends atmost of 17 requests a day, so plan
 
-model_name = "llama3-8b-8192"
 
+def run_scheduler():
+    while True:
+        schedule.run_pending()
+        time.sleep(30)
+
+def tweet_job():
+    schedule.every(120).minutes.do(tweet)
 
 def generate_post_text():
     tweet = llm.chat.completions.create(
@@ -97,6 +96,7 @@ def tweet():
         sampletweet = generate_post_text()
         
         post_result = newapi.create_tweet(text=sampletweet)
+        print("Just Tweeted!")
     
     except Exception as e:
         print(f"Tweet couldn't be posted because: {e}")
