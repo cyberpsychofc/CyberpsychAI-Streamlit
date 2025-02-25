@@ -5,7 +5,7 @@ from groq import Groq
 
 load_dotenv()
 
-GROQ_API_KEY = st.secret["GROQ_API_KEY"]
+GROQ_API_KEY = st.secret["general"]["GROQ_API_KEY"]
 
 llm = Groq(api_key=GROQ_API_KEY)  # LLM initialization
 
