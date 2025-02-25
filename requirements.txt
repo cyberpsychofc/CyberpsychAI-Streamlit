@@ -1,0 +1,4 @@
+schedule
+tweepy
+groq
+python-dotenv
