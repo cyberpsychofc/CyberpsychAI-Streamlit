@@ -44,7 +44,7 @@ api = tweepy.API(auth)
 llm = Groq(api_key=GROQ_API_KEY)  # LLM initialization
 
 post_times = ["19:30","21:30","23:30","01:30","03:30",
-"05:30","07:30","09:30","11:30","13:30","15:30","17:30","19:30"]  # Instance timezone is UTC
+"05:30","07:30","09:30","11:30","13:30","15:30","17:30"]  # Instance timezone is UTC
 
 # rivals = ['MistralAI','ChatGPTapp','deepseek_ai','AnthropicAI','GeminiApp','github','MSFTCopilot','Apple']
 
@@ -62,7 +62,7 @@ it in less than 250 characters. Your response should be precise, avoid using any
 def run_scheduler():
     while True:
         schedule.run_pending()
-        time.sleep(30)
+        time.sleep(60)
 
 def tweet_job():
     schedule.clear()
