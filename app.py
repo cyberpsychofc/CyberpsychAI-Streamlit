@@ -67,7 +67,7 @@ Roast them in less than 250 words. The context is {}.
 def run_scheduler():
     while True:
         schedule.run_pending()
-        time.sleep(30)
+        time.sleep(60)
 
 def tweet_job():
     schedule.clear()
