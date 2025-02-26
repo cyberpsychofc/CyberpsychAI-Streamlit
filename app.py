@@ -1,3 +1,5 @@
+import io
+import sys
 import time
 import random
 import tweepy
@@ -6,8 +8,9 @@ import schedule
 from groq import Groq
 import streamlit as st
 import logging
-logging.basicConfig(level=logging.INFO)
 from dotenv import load_dotenv
+import warnings
+warnings.filterwarnings("ignore")
 
 load_dotenv()
 
@@ -18,6 +21,30 @@ st.set_page_config(
 
 st.title('CyberpsychAI')
 st.markdown("*Thinking something interesting...*")
+log_container = st.empty()
+
+class StreamlitLogHandler(logging.Handler):
+    def __init__(self, container):
+        super().__init__()
+        self.container = container
+        self.log_messages = [] 
+   
+    def emit(self, record):
+        log_entry = self.format(record)  
+        self.log_messages.append(log_entry)  
+        log_text = "\n".join(self.log_messages) 
+        self.container.text(log_text)
+
+logger = logging.getLogger("streamlit_logger")
+logger.setLevel(logging.INFO)
+
+streamlit_handler = StreamlitLogHandler(log_container)
+streamlit_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
+logger.addHandler(streamlit_handler)
+
+streamlit_default_handler = logging.StreamHandler()
+streamlit_default_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
+logger.addHandler(streamlit_default_handler)
 
 ACCESS_KEY = st.secrets["general"]["ACCESS_KEY"]
 ACCESS_SECRET = st.secrets["general"]["ACCESS_SECRET"]
