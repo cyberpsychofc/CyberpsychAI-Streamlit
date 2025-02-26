@@ -68,7 +68,7 @@ newapi = tweepy.Client(
 api = tweepy.API(auth)
 llm = Groq(api_key=GROQ_API_KEY)  # LLM initialization
 
-post_times = ["06:36","01:30","03:30","05:30","07:30","09:30",
+post_times = ["06:41","06:43","01:30","03:30","05:30","07:30","09:30",
               "11:30","13:30","15:30","17:30","19:30","21:30","23:30"]  # Instance timezone is UTC
 
 # rivals = ['MistralAI','ChatGPTapp','deepseek_ai','AnthropicAI','GeminiApp','github','MSFTCopilot','Apple']
@@ -129,8 +129,11 @@ def tweet():
 
 tweet_job()
 
-# Ensuring the thread runs only once
-if not any(isinstance(thread, threading.Thread) and thread.is_alive() for thread in threading.enumerate()):
+if "scheduler_started" not in st.session_state:
+    st.session_state.scheduler_started = False
+
+if not st.session_state.scheduler_started:
     logger.info('CyberpsychAI is online...')
     task = threading.Thread(target=run_scheduler, daemon=True)
     task.start()
+    st.session_state.scheduler_started = True
