@@ -5,6 +5,8 @@ import threading
 import schedule
 from groq import Groq
 import streamlit as st
+import logging
+logging.basicConfig(level=logging.INFO)
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -68,6 +70,7 @@ def run_scheduler():
         time.sleep(30)
 
 def tweet_job():
+    schedule.clear()
     for post in post_times:
         schedule.every().day.at(post).do(tweet)
 
@@ -97,30 +100,13 @@ def generate_reply_text(username, context):
 
 def tweet():
     try:
+        logging.info("Attempting to tweet...")
         sampletweet = generate_post_text()
-        
         post_result = newapi.create_tweet(text=sampletweet)
-    
+        logging.info(f"Tweet posted: {sampletweet}")
     except Exception as e:
-        print(f"Tweet couldn't be posted because: {e}")
-
-def reply():
-    try:
-        username = random.choice(rivals)
-        tweets = newapi.search_recent_tweets(
-            query=f"from:{username} -is:retweet -is:reply", 
-            max_results=10, 
-            tweet_fields=["id", "text"])
-        
-        if tweets:
-            latest_tweet = random.choice(tweets.data)  
-            tweet_id = latest_tweet.id  
-            tweet_text = latest_tweet.text  
-            newapi.create_tweet(in_reply_to_tweet_id=tweet_id, text=generate_reply_text(username,tweet_text))
-
-    except Exception as e:
-        print(f"Reply couldn't be posted because: {e}")
+        logging.error(f"Tweet couldn't be posted: {e}")
 
 tweet_job()
-task = threading.Thread(target=run_scheduler)
+task = threading.Thread(target=run_scheduler, daemon=True)
 task.start()
