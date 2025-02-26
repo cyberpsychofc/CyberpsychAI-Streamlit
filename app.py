@@ -46,20 +46,15 @@ llm = Groq(api_key=GROQ_API_KEY)  # LLM initialization
 post_times = ["19:30","21:30","23:30","01:30","03:30",
 "05:30","07:30","09:30","11:30","13:30","15:30","17:30","19:30"]  # Instance timezone is UTC
 
-rivals = ['MistralAI','ChatGPTapp','deepseek_ai','AnthropicAI','GeminiApp','github','MSFTCopilot','Apple']
+# rivals = ['MistralAI','ChatGPTapp','deepseek_ai','AnthropicAI','GeminiApp','github','MSFTCopilot','Apple']
 
 model_name = "llama3-8b-8192"
 
-psychs = ['Artifical Intelligence', 'Philosophy']
+psychs = ['Philosophy','Stoicism','Life Advices','Emotional Intelligence']
 
 prompt = f"""
-You are an expert on the topic of {random.choice(psychs)}, tell me a funny or uncommon fact about
+You are an expert on the topic of {random.choice(psychs)}, tell me an uncommon fact about
 it in less than 250 characters. Your response should be precise, avoid using any unnecessary words.
-"""
-
-roast = """
-You are a professional comedian. {} is your rival Artifical Intelligence company.
-Roast them in less than 250 words. The context is {}.
 """
 # Free-tier sends atmost of 17 requests a day, so plan
 
@@ -86,7 +81,7 @@ def generate_post_text():
     )
     return tweet.choices[0].message.content
 
-def generate_reply_text(username, context):
+def generate_reply_text(username, context, roast):
     reply = llm.chat.completions.create(
         messages=[
             {
@@ -108,5 +103,8 @@ def tweet():
         logging.error(f"Tweet couldn't be posted: {e}")
 
 tweet_job()
-task = threading.Thread(target=run_scheduler, daemon=True)
-task.start()
+
+# Ensuring the thread runs only once
+if not any(isinstance(thread, threading.Thread) and thread.is_alive() for thread in threading.enumerate()):
+    task = threading.Thread(target=run_scheduler, daemon=True)
+    task.start()
