@@ -130,6 +130,7 @@ def tweet():
         logging.error(f"Tweet couldn't be posted: {e}")
 
 tweet_job()
+logger.info('CyberpsychAI is online...')
 
 # Ensuring the thread runs only once
 if not any(isinstance(thread, threading.Thread) and thread.is_alive() for thread in threading.enumerate()):
