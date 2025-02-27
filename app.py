@@ -7,8 +7,6 @@ from groq import Groq
 import streamlit as st
 import logging
 from dotenv import load_dotenv
-import warnings
-warnings.filterwarnings("ignore")
 logging.basicConfig(level=logging.INFO)
 
 load_dotenv()
@@ -100,7 +98,7 @@ def tweet():
         logging.info("Attempting to tweet...")
         sampletweet = generate_post_text()
         post_result = newapi.create_tweet(text=sampletweet)
-        logging.info(f"Tweet posted: {post_result.data["id"]}")
+        logging.info(f"Tweet posted: {post_result.data['id']}")
     except Exception as e:
         logging.error(f"Tweet couldn't be posted: {e}")
 
