@@ -42,7 +42,7 @@ newapi = tweepy.Client(
 api = tweepy.API(auth)
 llm = Groq(api_key=GROQ_API_KEY)  # LLM initialization
 
-post_times = ["01:30","03:30","05:30","07:30","09:30",
+post_times = ["11:00","01:30","03:30","05:30","07:30","09:30",
               "11:30","13:30","15:30","17:30","19:30","21:30","23:30"]  # Instance timezone is UTC
 
 # rivals = ['MistralAI','ChatGPTapp','deepseek_ai','AnthropicAI','GeminiApp','github','MSFTCopilot','Apple']
@@ -105,10 +105,16 @@ def tweet():
 
 tweet_job()
 
+state_lock = threading.Lock()
+
 if "scheduler_started" not in st.session_state:
-    st.session_state.scheduler_started = False
+    with state_lock:
+        if "scheduler_started" not in st.session_state: 
+            st.session_state.scheduler_started = False
 
 if not st.session_state.scheduler_started:
-    task = threading.Thread(target=run_scheduler, daemon=True)
-    task.start()
-    st.session_state.scheduler_started = True
+    with state_lock:
+        if not st.session_state.scheduler_started:
+            task = threading.Thread(target=run_scheduler, daemon=True)
+            task.start()
+            st.session_state.scheduler_started = True
