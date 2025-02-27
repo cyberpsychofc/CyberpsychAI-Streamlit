@@ -52,7 +52,7 @@ post_times = ["01:30","03:30","05:30","07:30","09:30",
 
 model_name = "llama3-8b-8192"
 
-psychs = ['Philosophy','Stoicism','Life Advices','Emotional Intelligence']
+psychs = ['Philosophy','Stoicism','Life Advices','Neuroscience']
 
 prompt = f"""
 You are an expert on the topic of {random.choice(psychs)}, tell me an uncommon fact about
