@@ -7,7 +7,6 @@ from groq import Groq
 import streamlit as st
 import logging
 from dotenv import load_dotenv
-logging.basicConfig(level=logging.INFO)
 
 load_dotenv()
 
@@ -56,6 +55,8 @@ prompt = f"""
 You are an expert in {random.choice(psychs)}. Share a precise insight (under 250 characters) 
 that can improve my perspective on life or human behavior. Keep it concise and impactful, avoiding unnecessary words.
 """
+
+logging.basicConfig(level=logging.INFO)
 # Free-tier sends atmost of 17 requests a day, so plan
 
 
