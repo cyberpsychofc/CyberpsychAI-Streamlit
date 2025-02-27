@@ -55,8 +55,8 @@ model_name = "llama3-8b-8192"
 psychs = ['Philosophy','Stoicism','Life Advices','Neuroscience']
 
 prompt = f"""
-You are an expert on the topic of {random.choice(psychs)}, tell me an uncommon fact about
-it in less than 250 characters. Your response should be precise, avoid using any unnecessary words.
+You are an expert in {random.choice(psychs)}. Share a precise insight (under 250 characters) 
+that can improve my perspective on life or human behavior. Keep it concise and impactful, avoiding unnecessary words.
 """
 # Free-tier sends atmost of 17 requests a day, so plan
 
