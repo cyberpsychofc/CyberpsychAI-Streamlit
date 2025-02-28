@@ -49,7 +49,7 @@ scheduler_thread = None
 scheduler_thread_lock = threading.Lock() # avoids multiple threads to be created
 scheduler_running = False
 
-post_times = ["01:30","03:30","05:30","07:30","09:30",
+post_times = ["11:58","11:59","12:00","12:01","12:02","12:03","12:04","12:05","12:06","01:30","03:30","05:30","07:30","09:30",
               "11:30","13:30","15:30","17:30","19:30","21:30","23:30"]  # Instance timezone is UTC
 
 # rivals = ['MistralAI','ChatGPTapp','deepseek_ai','AnthropicAI','GeminiApp','github','MSFTCopilot','Apple']
@@ -78,10 +78,11 @@ def tweet_job():
 
             for post in post_times:
                 schedule.every().day.at(post).do(tweet)
-
-            scheduler_thread = threading.Thread(target=run_scheduler, daemon=True)
-            scheduler_thread.start()
-            scheduler_running = True
+            
+            if not any(t.name == "tweet_scheduler" for t in threading.enumerate()):
+                scheduler_thread = threading.Thread(target=run_scheduler, daemon=True, name='tweet_scheduler')
+                scheduler_thread.start()
+                scheduler_running = True
         else:
             logging.info("Scheduler is already running.")
 
