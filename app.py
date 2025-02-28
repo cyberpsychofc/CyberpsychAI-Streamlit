@@ -16,7 +16,7 @@ st.set_page_config(
 )
 
 st.title('CyberpsychAI')
-st.markdown("*Thinking something interesting...*")
+st.markdown("*Tweeting something interesting...*")
 
 LIMIT = 2 # Daily tweet limit
 
@@ -48,7 +48,7 @@ scheduler_thread = None
 scheduler_thread_lock = threading.Lock() # avoids multiple threads to be created
 scheduler_running = False
 
-post_times = ["04:37","01:30","03:30","05:30","07:30","09:30",
+post_times = ["04:41","01:30","03:30","05:30","07:30","09:30",
               "11:30","13:30","15:30","17:30","19:30","21:30","23:30"]  # Instance timezone is UTC
 
 # rivals = ['MistralAI','ChatGPTapp','deepseek_ai','AnthropicAI','GeminiApp','github','MSFTCopilot','Apple']
@@ -66,7 +66,7 @@ def run_scheduler():
     scheduler_running = True
     while scheduler_running:
         schedule.run_pending()
-        time.sleep(30) # allows the scheduler to run every 30 seconds w/o overhead
+        time.sleep(5) # allows the scheduler to run every 5 seconds w/o overhead
 
 def tweet_job():
     global scheduler_thread, scheduler_running
