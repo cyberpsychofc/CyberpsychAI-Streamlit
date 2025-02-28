@@ -45,7 +45,7 @@ llm = Groq(api_key=GROQ_API_KEY)  # LLM initialization
 scheduler_thread = None
 scheduler_thread_lock = threading.Lock() 
 
-post_times = ["01:50","01:30","03:30","05:30","07:30","09:30",
+post_times = ["01:51","01:30","03:30","05:30","07:30","09:30",
               "11:30","13:30","15:30","17:30","19:30","21:30","23:30"]  # Instance timezone is UTC
 
 # rivals = ['MistralAI','ChatGPTapp','deepseek_ai','AnthropicAI','GeminiApp','github','MSFTCopilot','Apple']
