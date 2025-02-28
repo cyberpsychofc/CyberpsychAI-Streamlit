@@ -123,16 +123,16 @@ def generate_reply_text(username, context, roast):
     return reply.choices[0].message.content
 
 def tweet():
-    global PROCEED, last_request_time
+    global PROCEED, last_request
     current_time = time.time()
     
     # If the request is too soon, stop all threads
-    if current_time - last_request_time < 1:
+    if current_time - last_request < 1:
         print("Too many requests! Stopping all threads.")
         abort_tweeting()
         return
     
-    last_request_time = current_time
+    last_request = current_time
     try:
         logging.info("Attempting to tweet...")
         if PROCEED > 0:
