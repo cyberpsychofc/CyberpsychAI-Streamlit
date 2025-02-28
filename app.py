@@ -15,12 +15,11 @@ st.set_page_config(
     layout="centered"
 )
 
+# flag to tweet
+PROCEED = 1
+
 st.title('CyberpsychAI')
 st.markdown("*Tweeting something interesting...*")
-
-# flag to tweet
-if "PROCEED" not in st.session_state:
-    st.session_state.PROCEED = 1
 
 ACCESS_KEY = st.secrets["general"]["ACCESS_KEY"]
 ACCESS_SECRET = st.secrets["general"]["ACCESS_SECRET"]
@@ -119,14 +118,15 @@ def generate_reply_text(username, context, roast):
     return reply.choices[0].message.content
 
 def tweet():
+    global PROCEED
     try:
         logging.info("Attempting to tweet...")
-        if st.session_state.PROCEED > 0:
+        if PROCEED > 0:
             sampletweet = generate_post_text()
             post_result = newapi.create_tweet(text=sampletweet)
             tweet_id = post_result.data.get('id', 'Unknown ID')
             logging.info(f"Tweet posted: {tweet_id}")
-            st.session_state.PROCEED -= 1
+            PROCEED -= 1
         else:
             raise Exception("Tweet for the scheduled time already posted.")
     except Exception as e:
