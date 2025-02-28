@@ -21,6 +21,9 @@ PROCEED = 1
 st.title('CyberpsychAI')
 st.markdown("*Tweeting something interesting...*")
 
+last_request = 0
+threads = []
+
 ACCESS_KEY = st.secrets["general"]["ACCESS_KEY"]
 ACCESS_SECRET = st.secrets["general"]["ACCESS_SECRET"]
 CONSUMER_KEY = st.secrets["general"]["CONSUMER_KEY"]
@@ -81,6 +84,7 @@ def tweet_job():
             
             if not any(t.name == "tweet_scheduler" for t in threading.enumerate()):
                 scheduler_thread = threading.Thread(target=run_scheduler, daemon=True, name='tweet_scheduler')
+                threads.append(scheduler_thread)
                 scheduler_thread.start()
                 scheduler_running = True
         else:
@@ -119,7 +123,16 @@ def generate_reply_text(username, context, roast):
     return reply.choices[0].message.content
 
 def tweet():
-    global PROCEED
+    global PROCEED, last_request_time
+    current_time = time.time()
+    
+    # If the request is too soon, stop all threads
+    if current_time - last_request_time < 1:
+        print("Too many requests! Stopping all threads.")
+        abort_tweeting()
+        return
+    
+    last_request_time = current_time
     try:
         logging.info("Attempting to tweet...")
         if PROCEED > 0:
@@ -133,4 +146,10 @@ def tweet():
     except Exception as e:
         logging.error(f"Tweet couldn't be posted: {e}")
 
+def abort_tweeting():
+    for thread in threads:
+        if thread.is_alive():
+            print(f"Stopping thread {thread.name}")
+        threads.clear()
+    
 tweet_job()
