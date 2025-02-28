@@ -48,7 +48,7 @@ scheduler_thread = None
 scheduler_thread_lock = threading.Lock() # avoids multiple threads to be created
 scheduler_running = False
 
-post_times = ["04:33","01:30","03:30","05:30","07:30","09:30",
+post_times = ["04:37","01:30","03:30","05:30","07:30","09:30",
               "11:30","13:30","15:30","17:30","19:30","21:30","23:30"]  # Instance timezone is UTC
 
 # rivals = ['MistralAI','ChatGPTapp','deepseek_ai','AnthropicAI','GeminiApp','github','MSFTCopilot','Apple']
