@@ -100,6 +100,7 @@ def tweet():
         sampletweet = generate_post_text()
         post_result = newapi.create_tweet(text=sampletweet)
         logging.info(f"Tweet posted: {post_result.data['id']}")
+        time.sleep(600)
     except Exception as e:
         logging.error(f"Tweet couldn't be posted: {e}")
 
@@ -109,12 +110,10 @@ state_lock = threading.Lock() # avoids multiple threads to be created
 
 if "scheduler_started" not in st.session_state:
     with state_lock:
-        if "scheduler_started" not in st.session_state: 
-            st.session_state.scheduler_started = False
+        st.session_state.scheduler_started = False
 
 if not st.session_state.scheduler_started:
     with state_lock:
-        if not st.session_state.scheduler_started:
-            task = threading.Thread(target=run_scheduler, daemon=True)
-            task.start()
-            st.session_state.scheduler_started = True
+        task = threading.Thread(target=run_scheduler, daemon=True)
+        task.start()
+        st.session_state.scheduler_started = True
