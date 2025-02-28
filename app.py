@@ -18,7 +18,9 @@ st.set_page_config(
 st.title('CyberpsychAI')
 st.markdown("*Tweeting something interesting...*")
 
-LIMIT = 2 # Daily tweet limit
+# flag to tweet
+if "PROCEED" not in st.session_state:
+    st.session_state.PROCEED = 1
 
 ACCESS_KEY = st.secrets["general"]["ACCESS_KEY"]
 ACCESS_SECRET = st.secrets["general"]["ACCESS_SECRET"]
@@ -48,7 +50,7 @@ scheduler_thread = None
 scheduler_thread_lock = threading.Lock() # avoids multiple threads to be created
 scheduler_running = False
 
-post_times = ["04:41","01:30","03:30","05:30","07:30","09:30",
+post_times = ["01:30","03:30","05:30","07:30","09:30",
               "11:30","13:30","15:30","17:30","19:30","21:30","23:30"]  # Instance timezone is UTC
 
 # rivals = ['MistralAI','ChatGPTapp','deepseek_ai','AnthropicAI','GeminiApp','github','MSFTCopilot','Apple']
@@ -73,17 +75,17 @@ def tweet_job():
     with scheduler_thread_lock:
         if scheduler_thread is None or not scheduler_thread.is_alive():
             logging.info("Initializing tweet schedule...")
+            schedule.clear()  # Always clear before setting new schedules
 
-            if not scheduler_running:  # Avoid unnecessary clears
-                schedule.clear()
-                for post in post_times:
-                    schedule.every().day.at(post).do(tweet)
+            for post in post_times:
+                schedule.every().day.at(post).do(tweet)
 
             scheduler_thread = threading.Thread(target=run_scheduler, daemon=True)
             scheduler_thread.start()
             scheduler_running = True
         else:
-            logging.info("Scheduler is already running. No new thread required.")
+            logging.info("Scheduler is already running.")
+
 
 def generate_post_text():
     topic = random.choice(psychs)
@@ -117,16 +119,16 @@ def generate_reply_text(username, context, roast):
     return reply.choices[0].message.content
 
 def tweet():
-    global LIMIT
     try:
         logging.info("Attempting to tweet...")
-        if LIMIT > 0:
+        if st.session_state.PROCEED > 0:
             sampletweet = generate_post_text()
             post_result = newapi.create_tweet(text=sampletweet)
-            logging.info(f"Tweet posted: {post_result.data['id']}")
-            LIMIT -= 1
+            tweet_id = post_result.data.get('id', 'Unknown ID')
+            logging.info(f"Tweet posted: {tweet_id}")
+            st.session_state.PROCEED -= 1
         else:
-            raise Exception("Tweet limit reached for the day.")
+            raise Exception("Tweet for the scheduled time already posted.")
     except Exception as e:
         logging.error(f"Tweet couldn't be posted: {e}")
 
