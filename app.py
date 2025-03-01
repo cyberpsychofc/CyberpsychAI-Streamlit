@@ -138,8 +138,7 @@ def tweet():
         if PROCEED > 0:
             sampletweet = generate_post_text()
             post_result = newapi.create_tweet(text=sampletweet)
-            tweet_id = post_result.data.get('id')
-            logging.info(f"Tweet posted: {tweet_id}")
+            logging.info(f"Tweet posted: {post_result.data['id']}")
             PROCEED -= 1
         else:
             raise Exception("Tweet for the scheduled time already posted.")
