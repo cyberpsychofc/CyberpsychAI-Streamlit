@@ -11,9 +11,12 @@ jobs:
     name: wake-cyberpsychai
     steps:
       - uses: actions/checkout@v3
+      - env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          USERNAME: ${{ github.repository_owner }}
       - name: Commit & Push
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git commit --allow-empty -m "wake app signal"
+          git commit --allow-empty -m "Wake up signal for Streamlit"
           git push

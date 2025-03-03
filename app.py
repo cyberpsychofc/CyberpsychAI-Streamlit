@@ -144,6 +144,15 @@ def tweet():
             raise Exception("Tweet for the scheduled time already posted.")
     except Exception as e:
         logging.error(f"Tweet couldn't be posted: {e}")
+        if "403" in str(e):
+            time.sleep(10) # try after 5 seconds
+            logging.info("Retrying...")
+            try:
+                post_result = newapi.create_tweet(text=sampletweet)
+                logging.info(f"Retry successful. Tweet posted: {post_result.data['id']}")
+                PROCEED -= 1
+            except Exception as retry_error:
+                logging.error(f"Retry failed: {retry_error}")
 
 def abort_tweeting():
     for thread in threads:
