@@ -11,7 +11,7 @@ jobs:
     name: wake-cyberpsychai
     steps:
       - uses: actions/checkout@v3
-      - env:
+        env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
           USERNAME: ${{ github.repository_owner }}
       - name: Commit & Push
