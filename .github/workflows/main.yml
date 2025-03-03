@@ -1,0 +1,19 @@
+name: CyberpsychAI
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: wake-cyberpsychai
+    steps:
+      - uses: actions/checkout@v3
+      - name: Commit & Push
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git commit --allow-empty -m "wake app signal"
+          git push
