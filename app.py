@@ -15,9 +15,6 @@ st.set_page_config(
     layout="centered"
 )
 
-# flag to tweet
-PROCEED = 1
-
 st.title('CyberpsychAI')
 st.markdown("*Tweeting something interesting...*")
 
@@ -52,7 +49,7 @@ scheduler_thread = None
 scheduler_thread_lock = threading.Lock() # avoids multiple threads to be created
 scheduler_running = False
 
-post_times = ["01:30","03:30","04:30","05:30","07:30","09:30",
+post_times = ["01:30","03:30","05:00","05:30","07:30","09:30",
               "11:30","12:30","13:30","15:30","17:30","19:30","21:30","23:30"]  # Instance timezone is UTC
 
 # rivals = ['MistralAI','ChatGPTapp','deepseek_ai','AnthropicAI','GeminiApp','github','MSFTCopilot','Apple']
@@ -123,7 +120,7 @@ def generate_reply_text(username, context, roast):
     return reply.choices[0].message.content
 
 def tweet():
-    global PROCEED, last_request
+    global last_request
     current_time = time.time()
     
     # If the request is too soon, stop all threads
@@ -135,13 +132,9 @@ def tweet():
     last_request = current_time
     try:
         logging.info("Attempting to tweet...")
-        if PROCEED > 0:
-            sampletweet = generate_post_text()
-            post_result = newapi.create_tweet(text=sampletweet)
-            logging.info(f"Tweet posted: {post_result.data['id']}")
-            PROCEED -= 1
-        else:
-            raise Exception("Tweet for the scheduled time already posted.")
+        sampletweet = generate_post_text()
+        post_result = newapi.create_tweet(text=sampletweet)
+        logging.info(f"Tweet posted: {post_result.data['id']}")
     except Exception as e:
         logging.error(f"Tweet couldn't be posted: {e}")
         if "403" in str(e):
@@ -150,7 +143,6 @@ def tweet():
             try:
                 post_result = newapi.create_tweet(text=sampletweet)
                 logging.info(f"Retry successful. Tweet posted: {post_result.data['id']}")
-                PROCEED -= 1
             except Exception as retry_error:
                 logging.error(f"Retry failed: {retry_error}")
 
