@@ -138,7 +138,7 @@ def tweet():
     except Exception as e:
         logging.error(f"Tweet couldn't be posted: {e}")
         if "403" in str(e):
-            time.sleep(120) # try after 2 minutes
+            time.sleep(180) # try after 3 minutes
             logging.info("Retrying...")
             try:
                 post_result = newapi.create_tweet(text=sampletweet)
