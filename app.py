@@ -42,7 +42,6 @@ newapi = tweepy.Client(
     consumer_secret= CONSUMER_SECRET,
 )
 
-api = tweepy.API(auth)
 llm = Groq(api_key=GROQ_API_KEY)  # LLM initialization
 
 scheduler_thread = None
@@ -107,18 +106,6 @@ def generate_post_text():
     )
     return tweet.choices[0].message.content
 
-def generate_reply_text(username, context, roast):
-    reply = llm.chat.completions.create(
-        messages=[
-            {
-                'role':'system',
-                'content': roast.format(username, context)
-            }
-        ],
-        model=model_name,
-    )
-    return reply.choices[0].message.content
-
 def tweet():
     global last_request
     current_time = time.time()
@@ -135,9 +122,9 @@ def tweet():
         sampletweet = generate_post_text()
         post_result = newapi.create_tweet(text=sampletweet)
         logging.info(f"Tweet posted: {post_result.data['id']}")
-    except Exception as e:
-        logging.error(f"Tweet couldn't be posted: {e}")
-        if "403" in str(e):
+    except tweepy.TweepyException as e:
+        logging.error(f"Tweet couldn't be posted: {e.response.text}")
+        if "403" in str(e.response.text):
             time.sleep(180) # try after 3 minutes
             logging.info("Retrying...")
             try:
