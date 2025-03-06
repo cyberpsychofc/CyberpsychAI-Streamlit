@@ -16,7 +16,7 @@ st.set_page_config(
 )
 
 st.title('CyberpsychAI')
-st.markdown("*Tweeting something interesting...*")
+st.markdown("*Thinking something interesting...*")
 
 last_request = 0
 threads = []
@@ -48,10 +48,8 @@ scheduler_thread = None
 scheduler_thread_lock = threading.Lock() # avoids multiple threads to be created
 scheduler_running = False
 
-post_times = ["01:30","03:30","05:00","05:30","07:30","09:30",
+post_times = ["01:30","03:30","04:30","05:30","07:30","09:30",
               "11:30","12:30","13:30","15:30","17:30","19:30","21:30","23:30"]  # Instance timezone is UTC
-
-# rivals = ['MistralAI','ChatGPTapp','deepseek_ai','AnthropicAI','GeminiApp','github','MSFTCopilot','Apple']
 
 model_name = "llama3-8b-8192"
 
@@ -125,9 +123,10 @@ def tweet():
     except tweepy.TweepyException as e:
         logging.error(f"Tweet couldn't be posted: {e.response.text}")
         if "403" in str(e.response.text):
-            time.sleep(180) # try after 3 minutes
+            time.sleep(60) # try after a minute
             logging.info("Retrying...")
             try:
+                sampletweet = generate_post_text()
                 post_result = newapi.create_tweet(text=sampletweet)
                 logging.info(f"Retry successful. Tweet posted: {post_result.data['id']}")
             except Exception as retry_error:
