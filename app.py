@@ -51,7 +51,7 @@ scheduler_running = False
 post_times = ["01:30","03:30","04:30","05:30","07:30","09:30",
               "11:30","12:30","13:30","15:30","17:30","19:30","21:30","23:30"]  # Instance timezone is UTC
 
-model_name = "llama3-8b-8192"
+model_name = "deepseek-r1-distill-llama-70b"
 
 psychs = ['Philosophy','Stoicism','Life Advices','Neuroscience']
 
