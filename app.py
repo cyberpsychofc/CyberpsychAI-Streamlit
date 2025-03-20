@@ -27,24 +27,13 @@ CONSUMER_KEY = st.secrets["general"]["CONSUMER_KEY"]
 CONSUMER_SECRET = st.secrets["general"]["CONSUMER_SECRET"]
 BEARER_TOKEN = st.secrets["general"]["BEARER_TOKEN"]
 GROQ_API_KEY = st.secrets["general"]["GROQ_API_KEY"]
-CLIENT_ID = st.secrets["general"]["CLIENT_ID"]
-CLIENT_SECRET = st.secrets["general"]["CLIENT_SECRET"]
 
+# OAuth 1.0a authentication (For API v1.1)
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
-auth.set_access_token(
-    ACCESS_KEY,
-    ACCESS_SECRET,
-)
+auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
 
-newapi = tweepy.Client(
-    bearer_token= BEARER_TOKEN,
-    access_token= ACCESS_KEY,
-    access_token_secret= ACCESS_SECRET,
-    client_id=CLIENT_ID,
-    client_secret=CLIENT_SECRET,
-    consumer_key= CONSUMER_KEY,
-    consumer_secret= CONSUMER_SECRET,
-)
+# OAuth 2.0 authentication (For API v2)
+newapi = tweepy.Client(bearer_token=BEARER_TOKEN)
 
 llm = Groq(api_key=GROQ_API_KEY)  # LLM initialization
 
