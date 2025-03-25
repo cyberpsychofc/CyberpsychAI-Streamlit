@@ -22,7 +22,6 @@ last_request = 0
 threads = []
 
 ACCESS_KEY = st.secrets["general"]["ACCESS_KEY"]
-ACCESS_KEY = st.secrets["general"]["ACCESS_KEY"]
 ACCESS_SECRET = st.secrets["general"]["ACCESS_SECRET"]
 CONSUMER_KEY = st.secrets["general"]["CONSUMER_KEY"]
 CONSUMER_SECRET = st.secrets["general"]["CONSUMER_SECRET"]
